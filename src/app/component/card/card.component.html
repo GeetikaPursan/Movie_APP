@@ -1,0 +1,212 @@
+<div class="search-section">
+    <div class="create-movie">
+        <button class="create-movie-button" (click)="openAddMovieModal()">
+            <i class="fa fa-plus"> </i> Add
+        </button>
+    </div>
+    <div class="search-bar">
+        <label class="white-text">Search: </label>
+        <input type="text" placeholder="Search for a movie" [(ngModel)]="searchTerm"
+            (ngModelChange)="filterMovie($event)">
+    </div>
+
+    <div class="year">
+        <label class="white-text">Year: </label>
+        <select [(ngModel)]="selectedYear" (ngModelChange)="fiterYearByMovie($event)">
+            <option value="0">All</option>
+            <option>2010</option>
+            <option>2011</option>
+            <option>2012</option>
+            <option>2013</option>
+            <option>2014</option>
+            <option>2015</option>
+            <option>2016</option>
+            <option>2017</option>
+            <option>2018</option>
+            <option>2019</option>
+            <option>2020</option>
+        </select>
+    </div>
+</div>
+
+<div class="content">
+    <div *ngIf="noResultsFound" class="no-results">No results found for "{{ searchTerm }}"</div>
+    <div class="card" *ngFor="let movie of movies">
+        <div class="wrapper" (click)="openModal(movie)">
+            <img [src]="movie.poster" [alt]="movie.title">
+            <div class="card-content">
+                <h2 class="card-title">{{movie.title}}</h2>
+                <p>{{movie.movieYear}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" [ngClass]="{ 'open' : showCreateModal}" *ngIf="addNewMovie">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close" (click)="closeCreateModal()">&times;</span>
+            <h2>Create Movie</h2>
+        </div>
+
+        <div class="create movie-form">
+            <form (ngSubmit)="onSubmit()">
+                <div class="user-box">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" [(ngModel)]="addNewMovie.title">
+
+                    <label for="year">Year</label>
+                    <input type="text" id="year" name="year" [(ngModel)]="addNewMovie.movieYear">
+
+                    <label for="rated">Rated</label>
+                    <input type="text" id="rated" name="rated" [(ngModel)]="addNewMovie.rated">
+
+                    <label for="released">Released</label>
+                    <input type="text" id="released" name="released" [(ngModel)]="addNewMovie.released">
+
+                    <label for="runtime">Runtime</label>
+                    <input type="text" id="runtime" name="runtime" [(ngModel)]="addNewMovie.runtime">
+
+                    <label for="genre">Genre</label>
+                    <input type="text" id="genre" name="genre" [(ngModel)]="addNewMovie.genre">
+
+                    <label for="director">Director</label>
+                    <input type="text" id="director" name="director" [(ngModel)]="addNewMovie.director">
+
+                    <label for="writer">Writer</label>
+                    <input type="text" id="writer" name="writer" [(ngModel)]="addNewMovie.writer">
+
+                    <label for="actors">Actors</label>
+                    <input type="text" id="actors" name="actors" [(ngModel)]="addNewMovie.actors">
+
+                    <label for="plot">Plot</label>
+                    <textarea id="plot" name="plot" [(ngModel)]="addNewMovie.plot"></textarea>
+
+                    <label for="language">Language</label>
+                    <input type="text" id="language" name="language" [(ngModel)]="addNewMovie.language">
+
+                    <label for="country">Country</label>
+                    <input type="text" id="country" name="country" [(ngModel)]="addNewMovie.country">
+
+                    <label for="awards">Awards</label>
+                    <input type="text" id="awards" name="awards" [(ngModel)]="addNewMovie.awards">
+
+                    <label for="poster">Poster</label>
+                    <input type="text" id="poster" name="poster" [(ngModel)]="addNewMovie.poster">
+
+                    <label for="metascore">Metascore</label>
+                    <input type="text" id="metascore" [(ngModel)]="addNewMovie.metascore" name="metascore">
+
+                    <label for="imdbVotes">IMDb Votes</label>
+                    <input type="text" id="imdbVotes" [(ngModel)]="addNewMovie.imdbVotes" name="imdbVotes">
+
+                    <label for="imdbID">IMDb ID</label>
+                    <input type="text" id="imdbID" [(ngModel)]="addNewMovie.imdbID" name="imdbID">
+
+                    <label for="type">Type</label>
+                    <input type="text" id="type" [(ngModel)]="addNewMovie.type" name="type">
+
+                    <label for="dvd">DVD</label>
+                    <input type="text" id="dvd" [(ngModel)]="addNewMovie.dvd" name="dvd">
+
+                    <label for="boxOffice">Box Office</label>
+                    <input type="text" id="boxOffice" [(ngModel)]="addNewMovie.boxOffice" name="boxOffice">
+
+                    <label for="production">Production</label>
+                    <input type="text" id="production" [(ngModel)]="addNewMovie.production" name="production">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn">Submit</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" [ngClass]="{ 'show': showModal}" >
+    <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <div class="movie-content" *ngIf="selectedMovie">
+            <div class="movie-image">
+                <img [src]="selectedMovie.poster" [alt]="selectedMovie.title">
+                <div class="movie-button" *ngIf="!flag">
+                    <button class="create-movie-button" (click)="openUpdateMovie(selectedMovie)">
+                        <i class="fa fa-pencil"> </i> Update
+                    </button>
+                    <button class="create-movie-button" (click)="deleteMovie(selectedMovie)">
+                        <i class="fa fa-trash"> </i> Delete
+                    </button>
+                </div>
+
+                <div class="movie-button" *ngIf="flag">
+                    <button class="create-movie-button" (click)="saveUpdateMovie(selectedMovie)">
+                        <i class="fa fa-tick"> </i> Save
+                    </button>
+                    <button class="create-movie-button" (click)="cancel()">
+                        <i class="fa fa-cross"> </i> Cancel
+                    </button>
+                </div>
+
+
+            </div>
+            <div class="movie-details" *ngIf="!flag">
+                <h2 class="movie-title">{{selectedMovie.title}}</h2>
+                <p><span>Year: </span>{{selectedMovie.movieYear}}</p>
+                <p><span>Runtime: </span>{{selectedMovie.runtime}}</p>
+                <p><span>Released:</span> {{selectedMovie.released}}</p>
+                <p><span>Genre: </span>{{selectedMovie.genre}}</p>
+                <p><span>Director: </span>{{selectedMovie.director}}</p>
+                <p><span>Writer: </span> {{selectedMovie.writer}}</p>
+                <p><span>Awards: </span> {{selectedMovie.awards}}</p>
+                <p><span>Language: </span> {{selectedMovie.language}}</p>
+                <p><span>Country: </span>{{selectedMovie.country}}</p>
+                <p><span>Actors: </span>{{selectedMovie.actors}}</p>
+                <p><span>Plot: </span>{{selectedMovie.plot}}</p>
+            </div>
+
+            <div class="movie-details" *ngIf="flag">
+                <form>
+                    <div class="user-box">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" [(ngModel)]="selectedMovie.title">
+
+                        <label for="released">Released</label>
+                        <input type="text" id="released" name="released" [(ngModel)]="selectedMovie.released">
+    
+                        <label for="runtime">Runtime</label>
+                        <input type="text" id="runtime" name="runtime" [(ngModel)]="selectedMovie.runtime">
+    
+                        <label for="genre">Genre</label>
+                        <input type="text" id="genre" name="genre" [(ngModel)]="selectedMovie.genre">
+    
+                        <label for="director">Director</label>
+                        <input type="text" id="director" name="director" [(ngModel)]="selectedMovie.director">
+    
+                        <label for="writer">Writer</label>
+                        <input type="text" id="writer" name="writer" [(ngModel)]="selectedMovie.writer">
+    
+                        <label for="actors">Actors</label>
+                        <input type="text" id="actors" name="actors" [(ngModel)]="selectedMovie.actors">
+    
+                        <label for="plot">Plot</label>
+                        <textarea id="plot" name="plot" [(ngModel)]="selectedMovie.plot"></textarea>
+    
+                        <label for="language">Language</label>
+                        <input type="text" id="language" name="language" [(ngModel)]="selectedMovie.language">
+    
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" [(ngModel)]="selectedMovie.country">
+    
+                        <label for="awards">Awards</label>
+                        <input type="text" id="awards" name="awards" [(ngModel)]="selectedMovie.awards">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

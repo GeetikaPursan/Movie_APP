@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Open+Sans&display=swap');
+@import '~ngx-toastr/toastr';
+/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #e7dada;
+}
+
+.text-center {
+    align-items: center;
+}
